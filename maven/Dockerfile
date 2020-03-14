@@ -1,14 +1,14 @@
+# Dockerfile.tmpl
 FROM maven:3.6.3-jdk-11-slim
 
-RUN groupadd centos -g 1000 \
-    && useradd -m centos -u 1000 -g 1000 -d /home/user
-RUN mkdir -p /root/.m2 && chown centos:centos -R /root
-#&& ln -s /home/user/.m2 /root/.m2 
+ADD 1_entrypoint-user.sh /1_entrypoint-user.sh
+ADD 2_entrypoint-chown.sh /2_entrypoint-chown.sh
 
-USER centos
-WORKDIR /home/user
+RUN chmod +x /1_entrypoint-user.sh /2_entrypoint-chown.sh
 
-#RUN mkdir -p /home/user/.m2
+ARG MYUSER
+ARG MYGROUP
 
-ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh", "mvn"]
-#CMD mvn
+RUN mkdir -p /root/.m2
+
+ENTRYPOINT ["/1_entrypoint-user.sh", "/2_entrypoint-chown.sh", "/usr/local/bin/mvn-entrypoint.sh", "mvn"]

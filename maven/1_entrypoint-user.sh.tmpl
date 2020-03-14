@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+groupadd $MYGROUP -g $MYGID \
+  && useradd -m $MYUSER -u $MYUID -g $MYGID -d /home/user \
+  && chown centos:centos -R /root
+
+exec $@
