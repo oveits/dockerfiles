@@ -1,0 +1,14 @@
+FROM $FROM_IMAGE
+
+RUN groupadd $MYGROUP -g $MYGID \
+    && useradd -m $MYUSER -u $MYUID -g $MYGID -d /home/user
+RUN mkdir -p /root/.m2 && chown $MYUSER:$MYGROUP -R /root
+#&& ln -s /home/user/.m2 /root/.m2 
+
+USER $MYUSER
+WORKDIR /home/user
+
+#RUN mkdir -p /home/user/.m2
+
+ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh", "mvn"]
+#CMD mvn
