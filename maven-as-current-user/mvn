@@ -14,7 +14,8 @@ CONTAINER=$(docker run -d --rm \
   -e MYGROUP=$(id -ng) \
   -v $(pwd):/pwd \
   -v $HOME/.m2:/home/user/.m2 \
-  -w /pwd $MVN_AS_USER_IMAGE )
+  -w /pwd $MVN_AS_USER_IMAGE 
+)
 
 # run the maven command as current user:
 docker exec -it -u $(id -u) $CONTAINER mvn $@

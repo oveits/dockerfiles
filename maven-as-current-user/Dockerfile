@@ -1,15 +1,9 @@
-# Dockerfile.tmpl
-FROM maven:3.6.3-jdk-11-slim
+ARG FROM_IMAGE_VERSION=latest
+FROM maven:$FROM_IMAGE_VERSION
 
-ADD 1_entrypoint-user.sh /1_entrypoint-user.sh
-ADD 2_entrypoint-chown.sh /2_entrypoint-chown.sh
-ADD 4_runas.sh /4_runas.sh
+COPY 1_entrypoint-user.sh 2_entrypoint_init_and_run_mvn.sh /
 
-RUN chmod +x /1_entrypoint-user.sh /2_entrypoint-chown.sh /4_runas.sh
+RUN chmod +x /1_entrypoint-user.sh /2_entrypoint_init_and_run_mvn.sh
 
-ARG MYUSER
-ARG MYGROUP
+ENTRYPOINT ["/1_entrypoint-user.sh", "/2_entrypoint_init_and_run_mvn.sh", "mvn"]
 
-RUN mkdir -p /root/.m2
-
-ENTRYPOINT ["/1_entrypoint-user.sh", "/2_entrypoint-chown.sh", "/usr/local/bin/mvn-entrypoint.sh", "/4_runas.sh", "mvn"]
